@@ -7,7 +7,7 @@ import axios from "axios";
 import "./ChatWidget.css";
 
 export default function ChatWidget() {
-  const widgetId = "pakken-hamazda"; // Hardcoded widgetId
+  const widgetId = "pakken-hamazda";
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     { text: "Hi there! I’m your AI-powered assistant, ready to help you find the perfect Mazda or Used Car. I can even book a service whenever you need, just let me know how I can assist!", sender: "bot", showButtons: false },
@@ -22,17 +22,11 @@ export default function ChatWidget() {
 
   const handleOpenChat = async () => {
     setIsOpen(true);
-    window.parent.postMessage(
-      {
-        event: 'iframeButtonClick',
-      },
-      '*'
-    );
+    window.parent.postMessage({ event: 'iframeButtonClick' }, '*');
     let userIP = '';
     try {
       const ipRes = await axios.get('https://api64.ipify.org?format=json');
       userIP = ipRes.data.ip;
-      console.log(userIP);
     } catch (e) {
       console.error('IP fetch failed', e);
     }
@@ -64,9 +58,7 @@ export default function ChatWidget() {
     setLoading(true);
 
     try {
-      const response = await axios.post(`${SERVER_URL}/query`, {
-        query: input,
-      });
+      const response = await axios.post(`${SERVER_URL}/query`, { query: input });
       setMessages([
         ...newMessages,
         {
@@ -78,10 +70,7 @@ export default function ChatWidget() {
     } catch (error) {
       setMessages([
         ...newMessages,
-        {
-          text: "Sorry, something went wrong. Please try again.",
-          sender: "bot",
-        },
+        { text: "Sorry, something went wrong. Please try again.", sender: "bot" },
       ]);
     } finally {
       setLoading(false);
@@ -90,7 +79,7 @@ export default function ChatWidget() {
 
   return (
     <div className="ai-chat-widget-wrapper">
-      {/* Modern Blue Button */}
+      {/* Chat Button */}
       {!isOpen && (
         <div className="chat-button-container" onClick={handleOpenChat}>
           <button className="chat-button">
@@ -107,10 +96,7 @@ export default function ChatWidget() {
         <div className="chat-popup">
           <div className="chat-popup-header">
             <span>Live Chat</span>
-            <CloseOutlined
-              className="chat-popup-close"
-              onClick={() => setIsOpen(false)}
-            />
+            <CloseOutlined className="chat-popup-close" onClick={() => setIsOpen(false)} />
           </div>
           <div className="chat-popup-service">
             <a
@@ -126,11 +112,7 @@ export default function ChatWidget() {
             {messages.map((msg, index) => (
               <div key={index} className="message-wrapper">
                 {msg.sender !== "user" && (
-                  <img
-                    className="bot-avatar"
-                    src={image}
-                    alt="Bot Avatar"
-                  />
+                  <img className="bot-avatar" src={image} alt="Bot Avatar" />
                 )}
                 <div
                   className={msg.sender === "user" ? "user-message" : "bot-message"}
